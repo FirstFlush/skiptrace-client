@@ -1,0 +1,3 @@
+[console_scripts]
+tracer = main:tracer
+

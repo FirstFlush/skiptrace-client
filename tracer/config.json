@@ -1,0 +1,10 @@
+{
+    "SERVER": {
+        "domain": "http://localhost:8000/",
+        "endpoints": {
+            "launch": "scrape/launch/",
+            "list": "scrape/listSpiders/"
+        }
+    },
+    "DEBUG": true
+}
