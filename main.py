@@ -1,7 +1,7 @@
 import click
 import logging
 import pyfiglet
-import requests
+# import requests
 from tracer.tracer import Tracer
 
 
@@ -25,9 +25,9 @@ def list(all_spiders, spider_name):
     """List spider details."""
     tracer = Tracer()
     if all_spiders:    
-        table = tracer.list()
+        table = tracer.list_spiders()
     elif spider_name:
-        table = tracer.list(spider_name)
+        table = tracer.list_spiders(spider_name)
     else:
         click.echo("Please specify --all or provide a spider name with -s.")
 
