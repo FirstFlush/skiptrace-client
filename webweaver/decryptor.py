@@ -12,7 +12,7 @@ from .exceptions import PasswordError
 class FileDecryptor:
 
     def __init__(self):
-        self.vault = 'tracer/client.bin'
+        self.vault = 'webweaver/client.bin'
         self.file_path = Path(self.vault)
         if not self.file_path.exists():
             raise FileNotFoundError("client.bin does not exist in the specified directory!")

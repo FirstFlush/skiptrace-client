@@ -3,7 +3,8 @@
         "domain": "http://localhost:8000/",
         "endpoints": {
             "launch": "scrape/launch/",
-            "list": "scrape/listSpiders/"
+            "list": "scrape/listSpiders/",
+            "create": "scrape/create_spider/"
         }
     },
     "DEBUG": true

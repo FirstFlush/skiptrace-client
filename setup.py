@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='tracer',
+    name='webweaver',
     version='0.1',
     packages=find_packages(),
     install_requires=[
@@ -12,7 +12,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'tracer=main:tracer',
+            'webweaver=main:webweaver',
         ],
     },
 )

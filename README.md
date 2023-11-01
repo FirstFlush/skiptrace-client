@@ -1,6 +1,6 @@
-# Tracer CLI Client for Web Scraping Framework
+# WebWeaver CLI Client for Web Scraping Framework
 
-Tracer is a command-line interface (CLI) application, designed specifically to interact with the asynchronous web scraping framework. It offers a streamlined interface to command and query the scraping server, ensuring that you have direct control over the web scraping tasks right from your terminal.
+WebWeaver is a command-line interface (CLI) application, designed specifically to interact with the asynchronous web scraping framework. It offers a streamlined interface to command and query the scraping server, ensuring that you have direct control over the web scraping tasks right from your terminal.
 
 ## 🚀 Features
 
@@ -11,10 +11,10 @@ Tracer is a command-line interface (CLI) application, designed specifically to i
 
 ## 📜 Usage
 
-To get started with Tracer:
+To get started with WebWeaver:
 
 1. Navigate to the repository directory:
-2. Type the following command to view available options: `tracer --help`
+2. Type the following command to view available options: `WebWeaver --help`
 
 ## 🚧 Project Status
 
@@ -22,7 +22,7 @@ This project is currently a work-in-progress. Feedback, issues, and contribution
 
 ## ⚙️ Compatibility
 
-Designed to work seamlessly with the asynchronous web scraping framework. Ensure you have the server set up and running to use Tracer.
+Designed to work seamlessly with the asynchronous web scraping framework. Ensure you have the server set up and running to use WebWeaver.
 
 ## 📄 License
 

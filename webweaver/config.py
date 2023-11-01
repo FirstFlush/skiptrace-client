@@ -4,7 +4,7 @@ from termcolor import colored
 import logging.config
 import json
 
-with open('tracer/config.json', 'r') as f:
+with open('webweaver/config.json', 'r') as f:
     json_settings = json.load(f)
 
 
@@ -14,15 +14,12 @@ with open('tracer/config.json', 'r') as f:
 DOMAIN = json_settings['SERVER']['domain']
 LAUNCH_URL = json_settings['SERVER']['endpoints']['launch']
 LIST_URL = json_settings['SERVER']['endpoints']['list']
-
+CREATE_SPIDER_URL = json_settings['SERVER']['endpoints']['create']
 
 # Debug Status
 # ============================================
 DEBUG = False
-if DEBUG is True:
-    LOG_LEVEL = "DEBUG"
-else:
-    LOG_LEVEL = "INFO"
+
 
 # Constants
 # ============================================
@@ -47,9 +44,10 @@ class ColoredFormatter(logging.Formatter):
         colored_levelname = colored(record.levelname, color)
         return log_message.replace(record.levelname, colored_levelname)
 
-    # def bold(msg:str):
-    #     return f"\033[1m{msg}\033[0m"
-
+if DEBUG is True:
+    LOG_LEVEL = "DEBUG"
+else:
+    LOG_LEVEL = "INFO"
 
 LOGGING_CONFIG = {
     "version": 1,
