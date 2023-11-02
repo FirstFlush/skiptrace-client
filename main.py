@@ -43,17 +43,30 @@ def list(all, campaign_name):
 
 
 @campaigns.command()
-def launch():
+@click.argument('campaign_id', required=True)
+def launch(campaign_id:int):
     """Launch a campaign."""
-    # Your code to launch a campaign goes here.
-    click.echo("Launching campaign...")
+    click.echo(f"Launching campaign #{campaign_id}")
+    weaver = WebWeaver()
+    weaver.launch(weaver.enum.CAMPAIGNS, campaign_id)
+
+
+@campaigns.command()
+@click.option('--all', is_flag=True, help='List all campaigns.')
+@click.argument('campaign_number', required=False)
+def list(all:bool, campaign_number:int):
+    """List campaigns. If a campaign name is provided, details of that specific campaign will be shown."""
+    weaver = WebWeaver()
+    if all:
+        weaver.list_data(weaver.enum.CAMPAIGNS)
+    elif campaign_number:
+        weaver.list_data(weaver.enum.CAMPAIGNS, campaign_number)
+    else:
+        click.echo("Please specify either --all or provide a campaign's id.")
+
 
 # Add the campaigns group to the main cli group
 webweaver.add_command(campaigns)
-
-
-
-
 
 # For the `spiders` command group
 @click.group()
@@ -62,34 +75,40 @@ def spiders():
     pass
 
 
+
+@spiders.command()
+@click.argument('spider_id', required=True)
+def launch(spider_id:int):
+    """Launch a spider."""
+    click.echo(f"Launching spider #{spider_id}")
+    weaver = WebWeaver()
+    weaver.launch(weaver.enum.SPIDERS, spider_id)
+
+
+
 @spiders.command()
 @click.option('--all', is_flag=True, help='List all spiders.')
-@click.argument('spider_number', required=False)
-def list(all:bool, spider_number:int):
+@click.argument('spider_id', required=False)
+def list(all:bool, spider_id:int):
     """List spiders. If a spider name is provided, details of that specific spider will be shown."""
     weaver = WebWeaver()
     if all:
-        weaver.list_data(weaver.SPIDERS)
-    elif spider_number:
-        weaver.list_data(weaver.SPIDERS, spider_number)
+        weaver.list_data(weaver.enum.SPIDERS)
+    elif spider_id:
+        weaver.list_data(weaver.enum.SPIDERS, spider_id)
     else:
         click.echo("Please specify either --all or provide a spider's id.")
 
-
-@spiders.command(help="Launch a spider by its id.")
-@click.argument('spider_number', required=True, type=int)
-def launch(spider_number):
-    """Function logic for launching spider."""
-    pass
 
 @spiders.command()
 def create():
     """Create a new spider."""
     # Your code to create a spider goes here.
-    click.echo("Creating spider...")
+    click.echo("Not yet implemented!")
 
 # Add the spiders group to the main cli group
 webweaver.add_command(spiders)
+
 
 # For the `jobs` command group
 @click.group()
@@ -97,11 +116,23 @@ def jobs():
     """Manage jobs."""
     pass
 
+
 @jobs.command()
-def list():
+@click.option('--all', is_flag=True, help='List all jobs.')
+@click.option('--last', is_flag=True, help='List the last job.')
+@click.argument('job_id', required=False)
+def list(job_id:int, all:bool, last:bool):
     """List all jobs."""
-    # Your code to list jobs goes here.
-    click.echo("Listing all jobs...")
+    weaver = WebWeaver()
+    if job_id:
+        weaver.list_data(weaver.enum.JOBS, job_id)
+    elif all:
+        weaver.list_data(weaver.enum.JOBS)
+    elif last:
+        weaver.list_data(weaver.enum.JOBS, last=True)
+    else:
+        click.echo("Please specify either --all, --last, or provide a job's id.")
+
 
 # Add the jobs group to the main cli group
 webweaver.add_command(jobs)

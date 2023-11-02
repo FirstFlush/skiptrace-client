@@ -12,9 +12,12 @@ with open('webweaver/config.json', 'r') as f:
 # ENDPOINTS
 # ============================================
 DOMAIN = json_settings['SERVER']['domain']
-LAUNCH_URL = json_settings['SERVER']['endpoints']['launch']
-LIST_URL = json_settings['SERVER']['endpoints']['list']
-CREATE_SPIDER_URL = json_settings['SERVER']['endpoints']['create']
+LAUNCH_CAMPAIGN_ROUTE = json_settings['SERVER']['endpoints']['launch_campaign']
+LAUNCH_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['launch_spider']
+LIST_SPIDERS_ROUTE = json_settings['SERVER']['endpoints']['list_spiders']
+LIST_CAMPAIGNS_ROUTE = json_settings['SERVER']['endpoints']['list_campaigns']
+LIST_JOBS_ROUTE = json_settings['SERVER']['endpoints']['list_jobs']
+CREATE_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['create']
 
 # Debug Status
 # ============================================

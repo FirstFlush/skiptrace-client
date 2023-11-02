@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import requests
-from webweaver.config import DOMAIN, CREATE_SPIDER_URL
+from webweaver.config import DOMAIN, CREATE_SPIDER_ROUTE
 
 
 class CreateSpider:
@@ -52,7 +52,7 @@ class CreateSpider:
                 'spider_type': self.spider_type,
             },
         }
-        response = requests.post(f"{DOMAIN+CREATE_SPIDER_URL}", json=data)
+        response = requests.post(f"{DOMAIN+CREATE_SPIDER_ROUTE}", json=data)
         return response.status_code
 
 

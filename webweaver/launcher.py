@@ -1,19 +1,27 @@
-
-
+import requests
+from .config import DOMAIN, LAUNCH_CAMPAIGN_ROUTE, LAUNCH_SPIDER_ROUTE
 
 class Launcher:
     
-    ...
-    # def launch_all(self, api_headers:dict):
-    #     """Launch all spiders"""
-    #     logger.info("Launching all spiders...")
-    #     headers = api_headers
-    #     res = requests.post(DOMAIN+LAUNCH_URL, headers=headers)
-    #     logger.info("Scraping complete")
+    LAUNCH_CAMPAIGN_URL = DOMAIN+LAUNCH_CAMPAIGN_ROUTE
+    LAUNCH_SPIDER_URL = DOMAIN+LAUNCH_SPIDER_ROUTE
+    
+    def launch_spider(self, launch_headers:dict, spider_id:int):
+        """Launches a spider"""
+        res = requests.post(
+            self.LAUNCH_SPIDER_URL,
+            headers=launch_headers,
+            json={'id':spider_id}
+        )
+        print(res.status_code)
 
-    #     print(res.status_code)
 
-
-    # def launch_one(self, api_headers:dict, spider_name:str):
-    #     """Launches a single spider"""
-    #     logger.info(f"Launching spider: {spider_name}")
+    def launch_campaign(self, launch_headers:dict, campaign_id:int):
+        """Launches a campaign"""
+        res = requests.post(
+            self.LAUNCH_CAMPAIGN_URL,
+            headers=launch_headers,
+            json={'id':campaign_id}
+        )
+        print(res)
+        print(res.status_code)

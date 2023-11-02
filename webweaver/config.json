@@ -2,9 +2,12 @@
     "SERVER": {
         "domain": "http://localhost:8000/",
         "endpoints": {
-            "launch": "scrape/launch/",
-            "list": "scrape/listSpiders/",
-            "create": "scrape/create_spider/"
+            "launch_spider": "scrape/launch_spider",
+            "launch_campaign": "scrape/launch_campaign",
+            "list_campaigns": "campaigns/list_campaigns",
+            "list_jobs": "campaigns/list_jobs",
+            "list_spiders": "scrape/listSpiders",
+            "create": "scrape/create_spider"
         }
     },
     "DEBUG": true
