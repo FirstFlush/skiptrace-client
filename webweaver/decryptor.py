@@ -40,7 +40,7 @@ class FileDecryptor:
     def decrypt(self) -> dict:
         with open(self.vault, "rb") as f:
             stored_encrypted_data = f.read()
-        password = getpass(">> Enter your password: ")
+        password = getpass(">> Enter launch code: ")
         try:
             decrypted_data = self.decrypt_data(stored_encrypted_data, password)
         except CryptoError:

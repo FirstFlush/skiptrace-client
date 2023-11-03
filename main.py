@@ -16,7 +16,7 @@ click.echo(banner)
 @click.group()
 def webweaver():
     """Client-side CLI tool for interacting with the spider server"""
-    webweaver = WebWeaver()
+    # webweaver = WebWeaver()
     pass
 
 
@@ -43,24 +43,32 @@ def list(all, campaign_name):
 
 
 @campaigns.command()
+@click.option('-e', '--extension', type=str, help='File extension for the outfile.')
 @click.argument('campaign_id', required=True)
-def launch(campaign_id:int):
+def launch(campaign_id:int, extension:str):
     """Launch a campaign."""
-    click.echo(f"Launching campaign #{campaign_id}")
     weaver = WebWeaver()
-    weaver.launch(weaver.enum.CAMPAIGNS, campaign_id)
+    if extension is not None:
+        while extension not in weaver.ext_set:
+            weaver.print_ext_list(extension)
+            extension = input("\nPlease choose a valid file type: ").replace('.','')
+    if extension is None:
+        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} with no out file.")
+    else:
+        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} and saving as a .{extension} file.")
+    weaver.launch(weaver.group.CAMPAIGNS, campaign_id, extension)
 
 
 @campaigns.command()
-@click.option('--all', is_flag=True, help='List all campaigns.')
+@click.option('--all', 'all_campaigns', is_flag=True, help='List all campaigns.')
 @click.argument('campaign_number', required=False)
-def list(all:bool, campaign_number:int):
+def list(all_campaigns:bool, campaign_number:int):
     """List campaigns. If a campaign name is provided, details of that specific campaign will be shown."""
     weaver = WebWeaver()
-    if all:
-        weaver.list_data(weaver.enum.CAMPAIGNS)
+    if all_campaigns:
+        weaver.list_data(weaver.group.CAMPAIGNS)
     elif campaign_number:
-        weaver.list_data(weaver.enum.CAMPAIGNS, campaign_number)
+        weaver.list_data(weaver.group.CAMPAIGNS, campaign_number)
     else:
         click.echo("Please specify either --all or provide a campaign's id.")
 
@@ -78,24 +86,25 @@ def spiders():
 
 @spiders.command()
 @click.argument('spider_id', required=True)
+@click.argument('-e')
 def launch(spider_id:int):
     """Launch a spider."""
     click.echo(f"Launching spider #{spider_id}")
     weaver = WebWeaver()
-    weaver.launch(weaver.enum.SPIDERS, spider_id)
+    weaver.launch(weaver.group.SPIDERS, spider_id)
 
 
 
 @spiders.command()
-@click.option('--all', is_flag=True, help='List all spiders.')
+@click.option('--all', 'all_spiders', is_flag=True, help='List all spiders.')
 @click.argument('spider_id', required=False)
-def list(all:bool, spider_id:int):
+def list(all_spiders:bool, spider_id:int):
     """List spiders. If a spider name is provided, details of that specific spider will be shown."""
     weaver = WebWeaver()
-    if all:
-        weaver.list_data(weaver.enum.SPIDERS)
+    if all_spiders:
+        weaver.list_data(weaver.group.SPIDERS)
     elif spider_id:
-        weaver.list_data(weaver.enum.SPIDERS, spider_id)
+        weaver.list_data(weaver.group.SPIDERS, spider_id)
     else:
         click.echo("Please specify either --all or provide a spider's id.")
 
@@ -125,11 +134,11 @@ def list(job_id:int, all:bool, last:bool):
     """List all jobs."""
     weaver = WebWeaver()
     if job_id:
-        weaver.list_data(weaver.enum.JOBS, job_id)
+        weaver.list_data(weaver.group.JOBS, job_id)
     elif all:
-        weaver.list_data(weaver.enum.JOBS)
+        weaver.list_data(weaver.group.JOBS)
     elif last:
-        weaver.list_data(weaver.enum.JOBS, last=True)
+        weaver.list_data(weaver.group.JOBS, last=True)
     else:
         click.echo("Please specify either --all, --last, or provide a job's id.")
 
