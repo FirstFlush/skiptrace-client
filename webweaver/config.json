@@ -7,7 +7,8 @@
             "list_campaigns": "campaigns/list_campaigns",
             "list_jobs": "campaigns/list_jobs",
             "list_spiders": "scrape/listSpiders",
-            "create": "scrape/create_spider"
+            "save_job": "scrape/jobs/save",
+            "create_spider": "/campaigns/create_spider"
         }
     },
     "DEBUG": true

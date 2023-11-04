@@ -17,7 +17,8 @@ LAUNCH_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['launch_spider']
 LIST_SPIDERS_ROUTE = json_settings['SERVER']['endpoints']['list_spiders']
 LIST_CAMPAIGNS_ROUTE = json_settings['SERVER']['endpoints']['list_campaigns']
 LIST_JOBS_ROUTE = json_settings['SERVER']['endpoints']['list_jobs']
-CREATE_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['create']
+SAVE_JOB_TO_FILE_ROUTE = json_settings['SERVER']['endpoints']['save_job']
+CREATE_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['create_spider']
 
 # Debug Status
 # ============================================

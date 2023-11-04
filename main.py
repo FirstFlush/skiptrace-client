@@ -11,19 +11,29 @@ banner = pyfiglet.figlet_format("Web Weaver")
 click.echo()
 click.echo(banner)
 
-
-
+            
 @click.group()
 def webweaver():
     """Client-side CLI tool for interacting with the spider server"""
-    # webweaver = WebWeaver()
     pass
+
+# @click.group()
+# def outfile():
+#     """List outfile format options."""
+#     pass
+
+@webweaver.command()
+def outfile():
+    """List all outfile format options."""
+    weaver = WebWeaver()
+    weaver.print_file_format_list()
+    click.echo()
 
 
 # For the `campaigns` command group
 @click.group()
 def campaigns():
-    """Manage campaigns."""
+    """Launch or list campaigns"""
     pass
 
 
@@ -43,20 +53,21 @@ def list(all, campaign_name):
 
 
 @campaigns.command()
-@click.option('-e', '--extension', type=str, help='File extension for the outfile.')
+@click.option('-f', 'file_format', type=str, help='File format to save scraped data to.')
 @click.argument('campaign_id', required=True)
-def launch(campaign_id:int, extension:str):
+def launch(campaign_id:int, file_format:str):
     """Launch a campaign."""
     weaver = WebWeaver()
-    if extension is not None:
-        while extension not in weaver.ext_set:
-            weaver.print_ext_list(extension)
-            extension = input("\nPlease choose a valid file type: ").replace('.','')
-    if extension is None:
+    if file_format is not None:
+        while file_format not in weaver.file_format_set:
+            weaver.print_file_format_list(user_file_type=file_format)
+            # extension = input("\nPlease choose a valid file format: ").replace('.','')
+            file_format = input("\nPlease choose a valid file format: ").replace('.','')
+    if file_format is None:
         click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} with no out file.")
     else:
-        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} and saving as a .{extension} file.")
-    weaver.launch(weaver.group.CAMPAIGNS, campaign_id, extension)
+        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} and saving as a .{click.style(file_format, bold=True)} file.")
+    weaver.launch(weaver.group.CAMPAIGNS, campaign_id, file_format)
 
 
 @campaigns.command()
@@ -75,6 +86,7 @@ def list(all_campaigns:bool, campaign_number:int):
 
 # Add the campaigns group to the main cli group
 webweaver.add_command(campaigns)
+
 
 # For the `spiders` command group
 @click.group()
@@ -109,11 +121,11 @@ def list(all_spiders:bool, spider_id:int):
         click.echo("Please specify either --all or provide a spider's id.")
 
 
-@spiders.command()
-def create():
-    """Create a new spider."""
-    # Your code to create a spider goes here.
-    click.echo("Not yet implemented!")
+# @spiders.command()
+# def create():
+#     """Create a new spider."""
+#     # Your code to create a spider goes here.
+#     click.echo("Not yet implemented!")
 
 # Add the spiders group to the main cli group
 webweaver.add_command(spiders)
@@ -124,6 +136,16 @@ webweaver.add_command(spiders)
 def jobs():
     """Manage jobs."""
     pass
+
+@jobs.command()
+@click.argument('job_id', type=int, required=True)
+@click.option('-f', '--format', required=True, help="The output format.")
+def save(job_id:int, format:str):
+    """Save a job's scraped data to a file."""
+    weaver = WebWeaver()
+    weaver.save_job_to_file(job_id, format)
+
+
 
 
 @jobs.command()
