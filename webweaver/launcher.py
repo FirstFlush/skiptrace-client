@@ -5,13 +5,10 @@ class Launcher:
     
     LAUNCH_CAMPAIGN_URL = DOMAIN+LAUNCH_CAMPAIGN_ROUTE
     LAUNCH_SPIDER_URL = DOMAIN+LAUNCH_SPIDER_ROUTE
-    
-    def launch_spider(self, launch_headers:dict, spider_id:int, file_format:str=None):
+
+    def launch_spider(self, launch_headers: dict, launch_data:dict):
         """Launches a spider"""
-        json_data = {
-            'id':spider_id,
-            'file_format': file_format,
-        }
+        json_data = launch_data
         res = requests.post(
             self.LAUNCH_SPIDER_URL,
             headers=launch_headers,

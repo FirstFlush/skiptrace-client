@@ -1,8 +1,10 @@
 import click
+import json
 import logging
 import requests
 from .config import (
     DOMAIN, 
+    LIST_PARAMS_ROUTE,
     LIST_SPIDERS_ROUTE, 
     LIST_CAMPAIGNS_ROUTE, 
     LIST_JOBS_ROUTE,
@@ -41,6 +43,7 @@ class GroupEnum:
 class WebWeaver:
 
     api_headers:dict = None
+    LIST_PARAMS_URL = DOMAIN+LIST_PARAMS_ROUTE
     LIST_SPIDERS_URL = DOMAIN+LIST_SPIDERS_ROUTE
     LIST_CAMPAIGNS_URL = DOMAIN+LIST_CAMPAIGNS_ROUTE
     LIST_JOBS_URL = DOMAIN+LIST_JOBS_ROUTE
@@ -67,16 +70,13 @@ class WebWeaver:
         requests.post(self.SAVE_JOBS_URL, json=json_data)
 
 
-
     def _create_file_format_set(self) -> set:
         """Creates a set of allowed file types from the FileFormat class."""
         return {value for key, value in vars(self.file_formats).items() if not key.startswith("__")}
 
 
-
     def file_format_list(self) -> list:
         return sorted(list(self.file_format_set))
-
 
 
     def print_file_format_list(self, user_file_type:str=None):
@@ -91,12 +91,37 @@ class WebWeaver:
             click.echo(f"    -{click.style(file_type, fg='green')}")
 
 
-    def launch(self, enum:str, id:int, file_format:str=None):
-        launch_headers = self.get_headers()
-        if enum == self.group.CAMPAIGNS:
+    def launch(self, group_enum:str, id:int, file_format:str=None, scrape_job:int=None):
+        if group_enum == self.group.CAMPAIGNS:
+            launch_headers = self.get_headers()
             self.launcher.launch_campaign(launch_headers, id, file_format)
-        elif enum == self.group.SPIDERS:
-            self.launcher.launch_spider(launch_headers, id, file_format)
+
+        elif group_enum == self.group.SPIDERS:
+            launch_data = {
+                'id': id,
+                'file_format': file_format,
+                'params': [],
+                'scrape_job_id': scrape_job,
+            }
+            params_data = self._get_spider_params(id)
+            self.lister.title("Launch Spider id: ", id)
+            for param in params_data['params']:
+                self.lister.pretty_print(param)
+                param_value = click.prompt(click.style('\n>> Enter parameter value: '))
+                # launch_data['params'][param['param_name']] = param_value
+                d = {}
+                d['param_name'] = param['param_name']
+                d['param_value'] = param_value
+                launch_data['params'].append(d)
+            print(launch_data)
+
+            launch_headers = self.get_headers()
+            self.launcher.launch_spider(launch_headers, launch_data)
+
+
+    def _get_spider_params(self, spider_id:int) -> dict[str, list[dict[str, str]]]:
+        res_params = requests.get(self.LIST_PARAMS_URL, params={'id':spider_id})
+        return json.loads(res_params.text)
 
 
     def list_data(self, enum:str, id:int=None, **kwargs):

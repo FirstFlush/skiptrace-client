@@ -95,16 +95,13 @@ def spiders():
     pass
 
 
-
 @spiders.command()
+@click.option('-j', 'scrape_job', type=str, help='Set the scrape job id for the scrape.')
 @click.argument('spider_id', required=True)
-@click.argument('-e')
-def launch(spider_id:int):
+def launch(spider_id:int, scrape_job:int):
     """Launch a spider."""
-    click.echo(f"Launching spider #{spider_id}")
     weaver = WebWeaver()
-    weaver.launch(weaver.group.SPIDERS, spider_id)
-
+    weaver.launch(weaver.group.SPIDERS, spider_id, scrape_job=scrape_job)
 
 
 @spiders.command()

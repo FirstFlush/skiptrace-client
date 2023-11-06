@@ -9,12 +9,19 @@ from requests import Response
 
 class Lister:
 
+    # def list_spider_params(self, param:dict[str, str]):
+    #     self.pretty_print(param)
+
+    def title(self, title_text:str, id:int=None):
+        click.echo(click.style(title_text, fg="yellow")+click.style(id, fg="yellow", bold=True))
+        click.echo("="*80)
+
+
     def list_spiders(self, res:Response, spider_id:int=None):
         spider_data = json.loads(res.text)
-
         if spider_id:
-            click.echo(click.style(f"Spider id: {click.style(spider_id, bold=True)}", fg="yellow"))
-            click.echo("="*75)
+
+            self.title("Spider id: ", spider_id)
             self.pretty_print(spider_data)
 
         else:
@@ -30,10 +37,8 @@ class Lister:
     def list_campaigns(self, res:Response, campaign_id:int=None):
         campaign_data = json.loads(res.text)
         if campaign_id:
-            click.echo(click.style(f"Campaign id: {click.style(campaign_id, bold=True)}", fg="yellow"))
-            click.echo("="*70)
+            self.title("Campaign id: ", campaign_id)
             self.pretty_print(campaign_data)
-
         else:
             table = PrettyTable(["id", "campaign_name", "is_recurring"], align="l")
             for campaign in campaign_data:
@@ -44,16 +49,15 @@ class Lister:
     def list_jobs(self, res_text:str, id:int=None, last:bool=False):
         job_data = json.loads(res_text)
         if id or last:
-            click.echo(click.style(f"ScrapeJob id: {click.style(job_data['id'], bold=True)}", fg="yellow"))
-            click.echo("="*70)
+            self.title("ScrapeJob id: ", job_data['id'])
             del job_data['id']
+            job_data['date_scraped'] = self.time_pretty(job_data['date_scraped'])
             self.pretty_print(job_data)
-
         else:
             table = PrettyTable(["id", "campaign_id", "date_scraped"])
             for job in job_data:
-                date_scraped = datetime.strptime(job["date_scraped"], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%d  %H:%M:%S")
-                table.add_row([job["id"], job["campaign_id"], date_scraped])
+                job['date_scraped'] = self.time_pretty(job['date_scraped'])
+                table.add_row([job["id"], job["campaign_id"], job['date_scraped']])
             click.echo(table)
 
 
@@ -89,7 +93,11 @@ class Lister:
                 click.secho(' ' * (30 - indent - len(key)) + str(value), fg='green')
 
 
-
+    def time_pretty(self, time_str:str) -> str:
+        """Converts the time string of the received datetime 
+        object to something more readable
+        """
+        return datetime.strptime(time_str, "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%Y-%m-%d  %H:%M:%S")
 
 
 

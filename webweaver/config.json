@@ -5,6 +5,7 @@
             "launch_spider": "scrape/launch_spider",
             "launch_campaign": "scrape/launch_campaign",
             "list_campaigns": "campaigns/list_campaigns",
+            "list_params": "campaigns/list_params",
             "list_jobs": "campaigns/list_jobs",
             "list_spiders": "scrape/listSpiders",
             "save_job": "scrape/jobs/save",
