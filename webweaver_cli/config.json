@@ -9,7 +9,11 @@
             "list_jobs": "campaigns/list_jobs",
             "list_spiders": "scrape/listSpiders",
             "save_job": "scrape/jobs/save",
-            "create_spider": "/campaigns/create_spider"
+            "create_spider": "scrape/create_spider",
+            "create_params": "scrape/create_params"
+        },
+        "directories": {
+            "scraping_modules": "webweaver/scraping_modules"
         }
     },
     "DEBUG": true

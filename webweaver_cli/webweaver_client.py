@@ -10,6 +10,7 @@ from .config import (
     LIST_JOBS_ROUTE,
     SAVE_JOB_TO_FILE_ROUTE
 )
+from .create_spider import create_spider_script
 from .decryptor import FileDecryptor
 from .exceptions import PasswordError
 from .launcher import Launcher
@@ -34,15 +35,16 @@ class FileFormat:
 
 
 
+
 class GroupEnum:
     SPIDERS = "spiders"
     CAMPAIGNS = "campaigns"
     JOBS = "jobs"
 
 
-class WebWeaver:
+class WebWeaverClient:
 
-    api_headers:dict = None
+    api_headers:dict[str, str] = None
     LIST_PARAMS_URL = DOMAIN+LIST_PARAMS_ROUTE
     LIST_SPIDERS_URL = DOMAIN+LIST_SPIDERS_ROUTE
     LIST_CAMPAIGNS_URL = DOMAIN+LIST_CAMPAIGNS_ROUTE
@@ -57,12 +59,19 @@ class WebWeaver:
         self.file_format_set = self._create_file_format_set()
 
 
+    
+    def create_spider(self):
+        create_spider_script()
+
+
+
     def save_job_to_file(self, id:int, file_format:str):
         """Ensure the file is in the file_format_set and 
         then send the data to the server's save route.
         """
         while file_format not in self.file_format_set:
             file_format = self.print_file_format_list(file_format)
+            file_format = input('\nFile format: ')
         json_data = {
             'id':id,
             'file_format':file_format
@@ -94,6 +103,7 @@ class WebWeaver:
     def launch(self, group_enum:str, id:int, file_format:str=None, scrape_job:int=None):
         if group_enum == self.group.CAMPAIGNS:
             launch_headers = self.get_headers()
+            self.lister.title("Launch Campaign id: ", id)
             self.launcher.launch_campaign(launch_headers, id, file_format)
 
         elif group_enum == self.group.SPIDERS:
@@ -108,7 +118,6 @@ class WebWeaver:
             for param in params_data['params']:
                 self.lister.pretty_print(param)
                 param_value = click.prompt(click.style('\n>> Enter parameter value: '))
-                # launch_data['params'][param['param_name']] = param_value
                 d = {}
                 d['param_name'] = param['param_name']
                 d['param_value'] = param_value

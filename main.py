@@ -2,8 +2,8 @@ import click
 import logging
 import pyfiglet
 # import requests
-from webweaver.webweaver import WebWeaver
-from webweaver.create_spider import CreateSpider
+from webweaver_cli.webweaver_client import WebWeaverClient
+
 
 logger = logging.getLogger('client')
 
@@ -13,19 +13,15 @@ click.echo(banner)
 
             
 @click.group()
-def webweaver():
+def webweaver_cli():
     """Client-side CLI tool for interacting with the spider server"""
     pass
 
-# @click.group()
-# def outfile():
-#     """List outfile format options."""
-#     pass
 
-@webweaver.command()
+@webweaver_cli.command()
 def outfile():
     """List all outfile format options."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     weaver.print_file_format_list()
     click.echo()
 
@@ -57,16 +53,12 @@ def list(all, campaign_name):
 @click.argument('campaign_id', required=True)
 def launch(campaign_id:int, file_format:str):
     """Launch a campaign."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     if file_format is not None:
         while file_format not in weaver.file_format_set:
             weaver.print_file_format_list(user_file_type=file_format)
             # extension = input("\nPlease choose a valid file format: ").replace('.','')
             file_format = input("\nPlease choose a valid file format: ").replace('.','')
-    if file_format is None:
-        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} with no out file.")
-    else:
-        click.echo(f"Launching campaign #{click.style(campaign_id, fg='yellow', bold=True)} and saving as a .{click.style(file_format, bold=True)} file.")
     weaver.launch(weaver.group.CAMPAIGNS, campaign_id, file_format)
 
 
@@ -75,7 +67,7 @@ def launch(campaign_id:int, file_format:str):
 @click.argument('campaign_number', required=False)
 def list(all_campaigns:bool, campaign_number:int):
     """List campaigns. If a campaign name is provided, details of that specific campaign will be shown."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     if all_campaigns:
         weaver.list_data(weaver.group.CAMPAIGNS)
     elif campaign_number:
@@ -85,7 +77,7 @@ def list(all_campaigns:bool, campaign_number:int):
 
 
 # Add the campaigns group to the main cli group
-webweaver.add_command(campaigns)
+webweaver_cli.add_command(campaigns)
 
 
 # For the `spiders` command group
@@ -100,7 +92,7 @@ def spiders():
 @click.argument('spider_id', required=True)
 def launch(spider_id:int, scrape_job:int):
     """Launch a spider."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     weaver.launch(weaver.group.SPIDERS, spider_id, scrape_job=scrape_job)
 
 
@@ -109,7 +101,7 @@ def launch(spider_id:int, scrape_job:int):
 @click.argument('spider_id', required=False)
 def list(all_spiders:bool, spider_id:int):
     """List spiders. If a spider name is provided, details of that specific spider will be shown."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     if all_spiders:
         weaver.list_data(weaver.group.SPIDERS)
     elif spider_id:
@@ -118,14 +110,15 @@ def list(all_spiders:bool, spider_id:int):
         click.echo("Please specify either --all or provide a spider's id.")
 
 
-# @spiders.command()
-# def create():
-#     """Create a new spider."""
-#     # Your code to create a spider goes here.
-#     click.echo("Not yet implemented!")
+@spiders.command()
+def create():
+    """Create a new spider."""
+    weaver = WebWeaverClient()
+    weaver.create_spider()
+
 
 # Add the spiders group to the main cli group
-webweaver.add_command(spiders)
+webweaver_cli.add_command(spiders)
 
 
 # For the `jobs` command group
@@ -139,7 +132,7 @@ def jobs():
 @click.option('-f', '--format', required=True, help="The output format.")
 def save(job_id:int, format:str):
     """Save a job's scraped data to a file."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     weaver.save_job_to_file(job_id, format)
 
 
@@ -151,7 +144,7 @@ def save(job_id:int, format:str):
 @click.argument('job_id', required=False)
 def list(job_id:int, all:bool, last:bool):
     """List all jobs."""
-    weaver = WebWeaver()
+    weaver = WebWeaverClient()
     if job_id:
         weaver.list_data(weaver.group.JOBS, job_id)
     elif all:
@@ -163,22 +156,22 @@ def list(job_id:int, all:bool, last:bool):
 
 
 # Add the jobs group to the main cli group
-webweaver.add_command(jobs)
+webweaver_cli.add_command(jobs)
 
 if __name__ == '__main__':
-    webweaver()
+    webweaver_cli()
 
 
 
 
 
-# @webweaver.command()
+# @webweaver_cli.command()
 # def create():
 #     """Create a new spider."""
 #     CreateSpider().create_scraper()
 
 
-# @webweaver.command()
+# @webweaver_cli.command()
 # @click.option('--all', 'all_spiders', is_flag=True, help='List all spiders.')
 # @click.option('-s', 'spider_name', type=str, help='List a single spider by name.')
 # def list(all_spiders, spider_name):
@@ -194,7 +187,7 @@ if __name__ == '__main__':
 #     click.echo(table)
 
 
-# @webweaver.command()
+# @webweaver_cli.command()
 # @click.option('--all', 'all_spiders', is_flag=True, help='Launch all spiders.')
 # @click.option('-c', 'campaign', type=str, help='Launch a scraping campaign.')
 # @click.option('-s', 'spider_name', type=str, help='Launch a single spider by name.')

@@ -4,7 +4,7 @@ from termcolor import colored
 import logging.config
 import json
 
-with open('webweaver/config.json', 'r') as f:
+with open('webweaver_cli/config.json', 'r') as f:
     json_settings = json.load(f)
 
 
@@ -20,16 +20,17 @@ LIST_CAMPAIGNS_ROUTE = json_settings['SERVER']['endpoints']['list_campaigns']
 LIST_JOBS_ROUTE = json_settings['SERVER']['endpoints']['list_jobs']
 SAVE_JOB_TO_FILE_ROUTE = json_settings['SERVER']['endpoints']['save_job']
 CREATE_SPIDER_ROUTE = json_settings['SERVER']['endpoints']['create_spider']
+CREATE_PARAMS_ROUTE = json_settings['SERVER']['endpoints']['create_params']
 
 # Debug Status
 # ============================================
-DEBUG = False
+DEBUG = True
 
 
 # Constants
 # ============================================
 LOG_DIR = os.path.join(os.path.dirname(__file__), 'log')
-
+SCRAPING_MODULES_DIR = json_settings['SERVER']['directories']['scraping_modules']
 
 # Logging
 # ============================================
@@ -90,24 +91,3 @@ LOGGING_CONFIG = {
 logging.config.dictConfig(LOGGING_CONFIG)
 client_logger = logging.getLogger('client')
 
-
-# client_logger = logging.getLogger('client')
-
-# if DEBUG == True:
-#     client_logger.setLevel(logging.DEBUG)
-# else:
-#     client_logger.setLevel(logging.INFO)
-
-# log_formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-# stream_formatter = ColoredFormatter('%(levelname)-10s%(message)s')
-
-# stream_handler = logging.StreamHandler()
-# stream_handler.setLevel(logging.DEBUG)
-# stream_handler.setFormatter(stream_formatter)
-
-# file_handler = logging.FileHandler(f"{LOG_DIR}/client.log")
-# file_handler.setLevel(logging.WARNING)
-# file_handler.setFormatter(log_formatter)
-
-# client_logger.addHandler(file_handler)
-# client_logger.addHandler(stream_handler)

@@ -5,8 +5,6 @@ from prettytable import PrettyTable
 from requests import Response
 
 
-
-
 class Lister:
 
     # def list_spider_params(self, param:dict[str, str]):
